@@ -1,9 +1,11 @@
-import Login from './pages/Login';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { supabase } from './lib/supabase';
+import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-  const { user, loading } = useAuth();
+  const { user, role, loading } = useAuth();
 
   async function handleLogout() {
     const { error } = await supabase.auth.signOut();
@@ -17,18 +19,55 @@ function App() {
     return <p>Memeriksa sesi login...</p>;
   }
 
-  if (!user) {
-    return <Login />;
-  }
+  const homePath = role === 'owner' ? '/produk' : role === 'cashier' ? '/kasir' : null;
 
   return (
-    <main>
-      <h1>Selamat datang di KasirKita</h1>
-      <p>Login berhasil: {user.email}</p>
-      <button onClick={handleLogout}>
-        Logout
-      </button>
-    </main>
+    <Routes>
+      <Route
+        path="/login"
+        element={user && homePath ? <Navigate to={homePath} replace /> : <Login />}
+      />
+
+      <Route path="/" element={<Navigate to={user && homePath ? homePath : '/login'} replace />} />
+
+      <Route element={<ProtectedRoute allowedRole="owner" />}>
+        <Route
+          path="/produk"
+          element={
+            <main className="p-6">
+              <h1 className="text-2xl font-bold">Halaman Produk — Owner</h1>
+              <p>{user?.email}</p>
+              <button
+                onClick={handleLogout}
+                className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white"
+              >
+                Logout
+              </button>
+            </main>
+          }
+        />
+      </Route>
+
+      <Route element={<ProtectedRoute allowedRole="cashier" />}>
+        <Route
+          path="/kasir"
+          element={
+            <main className="p-6">
+              <h1 className="text-2xl font-bold">Halaman Kasir</h1>
+              <p>{user?.email}</p>
+              <button
+                onClick={handleLogout}
+                className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white"
+              >
+                Logout
+              </button>
+            </main>
+          }
+        />
+      </Route>
+
+      <Route path="*" element={<Navigate to={user && homePath ? homePath : '/login'} replace />} />
+    </Routes>
   );
 }
 
