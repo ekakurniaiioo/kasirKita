@@ -6,7 +6,10 @@ export default function AppLayout() {
 
   const menus =
     role === 'owner'
-      ? [{ label: 'Produk', path: '/produk' }]
+      ? [
+          { label: 'Produk', path: '/produk' },
+          { label: 'Kategori', path: '/kategori' },
+        ]
       : role === 'cashier'
         ? [{ label: 'Kasir', path: '/kasir' }]
         : [];
@@ -33,7 +36,7 @@ export default function AppLayout() {
         </nav>
       </aside>
 
-      <main className='min-w-0 flex-1 p-6'>
+      <main className="min-w-0 flex-1 p-6">
         <Outlet />
       </main>
     </div>

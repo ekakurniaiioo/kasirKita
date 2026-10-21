@@ -4,6 +4,7 @@ import { supabase } from './lib/supabase';
 import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import AppLayout from './components/AppLayout';
+import Kategori from './pages/Kategori';
 
 function App() {
   const { user, role, loading } = useAuth();
@@ -47,6 +48,7 @@ function App() {
               </main>
             }
           />
+          <Route path="/kategori" element={<Kategori />} />
         </Route>
       </Route>
 

@@ -6,6 +6,7 @@ export const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [role, setRole] = useState(null);
+  const [storeId, setStoreId] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,14 +16,16 @@ export function AuthProvider({ children }) {
       setLoading(true);
       setSession(newSession);
       setRole(null);
+      setStoreId(null);
 
       if (!newSession?.user) {
         if (active) setLoading(false);
+        return;
       }
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, store_id')
         .eq('id', newSession.user.id)
         .eq('is_active', true)
         .maybeSingle();
@@ -30,10 +33,11 @@ export function AuthProvider({ children }) {
       if (!active) return;
 
       if (error) {
-        console.log('Gagal mengambil role:', error.massage);
+        console.log('Gagal mengambil role:', error.message);
       }
 
       setRole(data?.role ?? null);
+      setStoreId(data?.store_id ?? null);
       setLoading(false);
     }
 
@@ -61,6 +65,7 @@ export function AuthProvider({ children }) {
         session,
         user: session?.user ?? null,
         role,
+        storeId,
         loading,
       }}
     >

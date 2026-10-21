@@ -24,7 +24,7 @@ export default function Table({ columns = [], data = [] }) {
               <tr key={row.id ?? index} className="border-t border-[#E5E3DD] transition-colors hover:bg-[#FAF9F6]">
                 {columns.map((column) => (
                   <td key={column.key} className="px-4 py-3 text-[#66736B]">
-                    {row[column.key]}
+                    {column.render ? column.render(row) : row[column.key]}
                   </td>
                 ))}
               </tr>

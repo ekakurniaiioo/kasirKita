@@ -24,9 +24,9 @@ export default function Login() {
       }
     } catch (err) {
       setError(
-        err.massage === 'Invalid login credentials'
+        err.message === 'Invalid login credentials'
           ? 'Email atau password salah.'
-          : err.massage || 'Login gagal. Silahkan coba lagi.',
+          : err.message || 'Login gagal. Silahkan coba lagi.',
       );
     } finally {
       setLoading(false);
