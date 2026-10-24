@@ -14,7 +14,7 @@ export default function ProtectedRoute({ allowedRole }) {
 
     if (role !== allowedRole) {
         if (role === "owner") {
-            return <Navigate to="/produk" replace />
+            return <Navigate to="/dashboard" replace />
         }
 
         if (role === "cashier") {

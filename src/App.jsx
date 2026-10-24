@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import AppLayout from './components/AppLayout';
 import Kategori from './pages/Kategori';
+import Produk from './pages/Produk';
 
 function App() {
   const { user, role, loading } = useAuth();
@@ -21,7 +22,7 @@ function App() {
     return <p>Memeriksa sesi login...</p>;
   }
 
-  const homePath = role === 'owner' ? '/produk' : role === 'cashier' ? '/kasir' : null;
+  const homePath = role === 'owner' ? '/dashboard' : role === 'cashier' ? '/kasir' : null;
 
   return (
     <Routes>
@@ -34,7 +35,7 @@ function App() {
       <Route element={<AppLayout />}>
         <Route element={<ProtectedRoute allowedRole="owner" />}>
           <Route
-            path="/produk"
+            path="/dashboard"
             element={
               <main className="p-6">
                 <h1 className="text-2xl font-bold">Halaman Produk — Owner</h1>
@@ -49,6 +50,7 @@ function App() {
             }
           />
           <Route path="/kategori" element={<Kategori />} />
+          <Route path="/produk" element={<Produk />} />
         </Route>
       </Route>
 

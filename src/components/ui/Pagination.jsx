@@ -5,6 +5,7 @@ export default function Pagination({
   totalItems = 0,
   pageSize = 5,
   onPageSizeChange,
+  itemLabel = 'transaksi',
 }) {
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalItems);
@@ -16,14 +17,14 @@ export default function Pagination({
       aria-label="Navigasi halaman"
       className="flex flex-wrap items-center justify-between gap-4"
     >
+      <div className="flex items-center gap-3">
       <p className="text-sm text-[#66736B]">
         Menampilkan{' '}
         <span className="font-semibold text-[#1F2B24]">
           {startItem}–{endItem}
         </span>{' '}
-        dari {totalItems} transaksi
+        dari {totalItems} {itemLabel}
       </p>
-      <div className="flex items-center gap-3">
         <label htmlFor="pagination-page-size" className="text-sm text-[#66736B]">
           Baris per halaman
         </label>
