@@ -1,6 +1,7 @@
+import { Image as ImageIcon } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabase';
 import Input from '../components/ui/Input';
@@ -11,7 +12,6 @@ import { productSchema } from '../schemas/productSchema';
 import { generateSKU } from '../utils/generateSKU';
 import { uploadProductImage } from '../lib/uploadProductImage';
 import { deleteProductImage } from '../lib/deleteProductImage';
-import { useNavigate } from 'react-router-dom';
 
 export default function FormProduk() {
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ export default function FormProduk() {
   const [productImage, setProductImage] = useState(null);
   const imageInputRef = useRef(null);
   const [oldImageUrl, setOldImageUrl] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
   const { storeId } = useAuth();
   const [categories, setCategories] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
@@ -70,20 +71,16 @@ export default function FormProduk() {
     fetchCategories();
   }, [storeId]);
 
-  function handleImageChange(e) {
-    const file = e.target.files?.[0];
-
+  function handleImageChange(file) {
     if (!file) return;
 
     if (!['image/jpeg', 'image/png'].includes(file.type)) {
       alert('Foto harus berformat JPG atau PNG');
-      e.target.value = '';
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
       alert('Ukuran foto maksimal 5 MB');
-      e.target.value = '';
       return;
     }
 
@@ -237,7 +234,9 @@ export default function FormProduk() {
         </h1>
 
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => navigate('/produk')}>Batal</Button>
+          <Button variant="secondary" onClick={() => navigate('/produk')}>
+            Batal
+          </Button>
           <Button variant="primary" type="submit" form="product-form" disabled={isSubmitting}>
             {isSubmitting ? 'Menyimpan...' : 'Simpan Produk'}
           </Button>
@@ -262,24 +261,56 @@ export default function FormProduk() {
             <div className="rounded-xl border border-[#E5E3DD] bg-white p-6">
               <h2 className="text-base font-semibold text-[#1F2B24]">Informasi Produk</h2>
 
-              <div className="mt-6">
-                <label
-                  htmlFor="product-image"
-                  className="mb-2 block text-sm font-medium text-[#1F2B24]"
-                >
-                  Foto Produk (Opsional)
-                </label>
+              <label
+                htmlFor="product-image"
+                className="mb-2 block text-sm font-medium text-[#1F2B24]"
+              >
+                Foto Produk (Opsional)
+              </label>
+              <div
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  handleImageChange(e.dataTransfer.files[0]);
+                  setIsDragging(false);
+                }}
+                onDragEnter={(e) => {
+                  e.preventDefault();
+                  setIsDragging(true);
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault();
+                  setIsDragging(false);
+                }}
+                onClick={() => imageInputRef.current?.click()}
+                className={`flex cursor-pointer items-center gap-5 rounded-xl border-2 border-dashed p-6 transition-colors ${
+                  isDragging
+                    ? 'border-[#176344] bg-[#EAF4ED]'
+                    : 'border-[#C8C7C0] bg-[#FAF9F6] hover:border-[#176344]'
+                }`}
+              >
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-[#F0EFE9]">
+                  <ImageIcon size={30} className="text-[#66665F]" />
+                </div>
+
+                <div>
+                  <p className="text-base font-semibold text-[#1F2B24]">
+                    Pilih atau seret foto ke sini
+                  </p>
+
+                  <p className="mt-1 text-sm text-[#66736B]">JPG atau PNG, maksimal 5 MB.</p>
+                </div>
 
                 <input
+                  ref={imageInputRef}
                   id="product-image"
                   type="file"
-                  ref={imageInputRef}
-                  accept="image/png,image/jpeg"
-                  onChange={handleImageChange}
-                  className="block w-full rounded-lg border border-[#E5E3DD] bg-white p-3 text-sm text-[#1F2B24] file:mr-4 file:rounded-md file:border-0 file:bg-[#F0F2EE] file:px-4 file:py-2 file:font-medium file:text-[#1F2B24]"
+                  accept="image/jpeg,image/png"
+                  onChange={(e) => handleImageChange(e.target.files?.[0])}
+                  onClick={(e) => e.stopPropagation()}
+                  className="sr-only"
+                  tabIndex={-1}
                 />
-
-                <p className="mt-2 text-xs text-gray-500">Format JPG atau PNG, maksimal 5 MB.</p>
               </div>
 
               <div className="mt-6">
