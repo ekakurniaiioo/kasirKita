@@ -10,6 +10,7 @@ export default function AppLayout() {
           { label: 'Dashboard', path: '/dashboard' },
           { label: 'Kategori', path: '/kategori' },
           { label: 'Produk', path: '/produk'},
+          { label: 'Settings', path: '/pengaturan'},
         ]
       : role === 'cashier'
         ? [{ label: 'Kasir', path: '/kasir' }]

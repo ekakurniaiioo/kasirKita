@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { supabase } from '../lib/supabase';
+import { useAuth } from '../../hooks/useAuth';
+import { supabase } from '../../lib/supabase';
 import { useNavigate } from 'react-router-dom';
-import Input from '../components/ui/Input';
-import Select from '../components/ui/Select';
-import Table from '../components/ui/Table';
-import Badge from '../components/ui/Badge';
-import Button from '../components/ui/Button';
-import Pagination from '../components/ui/Pagination';
+import Input from '../../components/ui/Input';
+import Select from '../../components/ui/Select';
+import Table from '../../components/ui/Table';
+import Badge from '../../components/ui/Badge';
+import Button from '../../components/ui/Button';
+import Pagination from '../../components/ui/Pagination';
 
 export default function Produk() {
   const { storeId } = useAuth();

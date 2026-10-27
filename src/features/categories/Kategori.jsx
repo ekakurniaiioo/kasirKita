@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { supabase } from '../lib/supabase';
-import Input from '../components/ui/Input';
-import Button from '../components/ui/Button';
-import Table from '../components/ui/Table';
-import Modal from '../components/ui/Modal';
+import { useAuth } from '../../hooks/useAuth';
+import { supabase } from '../../lib/supabase';
+import Input from '../../components/ui/Input';
+import Button from '../../components/ui/Button';
+import Table from '../../components/ui/Table';
+import Modal from '../../components/ui/Modal';
 
 export default function Kategori() {
   const { storeId } = useAuth();

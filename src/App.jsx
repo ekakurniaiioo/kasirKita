@@ -4,9 +4,10 @@ import { supabase } from './lib/supabase';
 import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import AppLayout from './components/AppLayout';
-import Kategori from './pages/Kategori';
-import Produk from './pages/Produk';
-import FormProduk from './pages/FormProduk';
+import Kategori from './features/categories/Kategori';
+import Produk from './features/products/Produk';
+import FormProduk from './features/products/FormProduk';
+import SettingsPage from './features/settings/SettingsPage';
 
 function App() {
   const { user, role, loading } = useAuth();
@@ -54,6 +55,7 @@ function App() {
           <Route path="/produk" element={<Produk />} />
           <Route path="/produk/:id/edit" element={<FormProduk />} />
           <Route path="/produk/tambah" element={<FormProduk />} />
+          <Route path="/pengaturan" element={<SettingsPage />} />
         </Route>
       </Route>
 

@@ -2,16 +2,16 @@ import { Image as ImageIcon } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { supabase } from '../lib/supabase';
-import Input from '../components/ui/Input';
-import Select from '../components/ui/Select';
-import Button from '../components/ui/Button';
+import { useAuth } from '../../hooks/useAuth';
+import { supabase } from '../../lib/supabase';
+import Input from '../../components/ui/Input';
+import Select from '../../components/ui/Select';
+import Button from '../../components/ui/Button';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { productSchema } from '../schemas/productSchema';
-import { generateSKU } from '../utils/generateSKU';
-import { uploadProductImage } from '../lib/uploadProductImage';
-import { deleteProductImage } from '../lib/deleteProductImage';
+import { productSchema } from '../../schemas/productSchema';
+import { generateSKU } from '../../utils/generateSKU';
+import { uploadProductImage } from '../../lib/uploadProductImage';
+import { deleteProductImage } from '../../lib/deleteProductImage';
 
 export default function FormProduk() {
   const navigate = useNavigate();
