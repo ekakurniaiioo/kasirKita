@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AppLayout from './components/AppLayout';
 import Kategori from './pages/Kategori';
 import Produk from './pages/Produk';
+import FormProduk from './pages/FormProduk';
 
 function App() {
   const { user, role, loading } = useAuth();
@@ -51,6 +52,8 @@ function App() {
           />
           <Route path="/kategori" element={<Kategori />} />
           <Route path="/produk" element={<Produk />} />
+          <Route path="/produk/:id/edit" element={<FormProduk />} />
+          <Route path="/produk/tambah" element={<FormProduk />} />
         </Route>
       </Route>
 

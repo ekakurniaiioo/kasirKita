@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabase';
+import { useNavigate } from 'react-router-dom';
 import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
 import Table from '../components/ui/Table';
@@ -10,6 +11,7 @@ import Pagination from '../components/ui/Pagination';
 
 export default function Produk() {
   const { storeId } = useAuth();
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -93,7 +95,11 @@ export default function Produk() {
     {
       key: 'actions',
       label: '',
-      render: (product) => <Button variant="textSuccess">Ubah</Button>,
+      render: (product) => (
+        <Button variant="textSuccess" onClick={() => navigate(`/produk/${product.id}/edit`)}>
+          Ubah
+        </Button>
+      ),
     },
   ];
   const categoryOptions = [
@@ -104,41 +110,40 @@ export default function Produk() {
     })),
   ];
 
-  async function fetchProductStats() {
-    if (!storeId) return;
-
-    const { data, error: statsError } = await supabase
-      .from('products')
-      .select('stock, low_stock_threshold, is_active')
-      .eq('store_id', storeId);
-
-    if (statsError) {
-      setError(statsError.message);
-      return;
-    }
-
-    const activeProducts = (data ?? []).filter((product) => product.is_active === true);
-
-    const lowStockProducts = activeProducts.filter(
-      (product) =>
-        product.stock > 0 &&
-        product.low_stock_threshold != null &&
-        product.stock <= product.low_stock_threshold,
-    );
-
-    const outOfStockProducts = activeProducts.filter((product) => product.stock === 0);
-
-    setProductStats({
-      active: activeProducts.length,
-      lowStock: lowStockProducts.length,
-      outOfStock: outOfStockProducts.length,
-    });
-  }
-
   useEffect(() => {
     if (!storeId) return;
 
-    fetchProductStats();
+    let ignore = false;
+
+    async function loadProductStats() {
+      const { data, error } = await supabase
+        .from('products')
+        .select('stock, low_stock_threshold, is_active')
+        .eq('store_id', storeId);
+
+      if (ignore) return;
+
+      if (error) {
+        console.error('Gagal mengambil statistik produk:', error.message);
+        return;
+      }
+
+      const activeProducts = (data ?? []).filter((product) => product.is_active);
+
+      setProductStats({
+        active: activeProducts.length,
+        lowStock: activeProducts.filter(
+          (product) => product.stock > 0 && product.stock <= product.low_stock_threshold,
+        ).length,
+        outOfStock: activeProducts.filter((product) => product.stock === 0).length,
+      });
+    }
+
+    loadProductStats();
+
+    return () => {
+      ignore = true;
+    };
   }, [storeId]);
 
   useEffect(() => {

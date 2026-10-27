@@ -2,6 +2,7 @@ export default function Button({
   children,
   onClick,
   type = 'button',
+  form,
   variant = 'primary',
   disabled = false,
 }) {
@@ -17,6 +18,7 @@ export default function Button({
   return (
     <button
       type={type}
+      form={form}
       onClick={onClick}
       disabled={disabled}
       className={`min-h-11 rounded-lg font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
